@@ -1,0 +1,73 @@
+<htmll lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>api practice</title>
+    </head>
+    
+    <body>
+        <img src="#">
+        <button id="new-gif-btn">Random New Cat GIF</button>
+        <label>Find cat GIFs relating to: <input id="search-input"></label>
+        <button id="search-btn">Search</button>
+        <script>
+            const img = document.querySelector('img');
+            const originalSearchLink = 'https://api.giphy.com/v1/gifs/translate?api_key=KwcxvVnwXtO1U6UlgHjQEqEJRnneLDu1&s=cats';
+            let newSearchLink = '';
+
+            showNewGIF = (searchLink) => {
+                fetch(searchLink, 
+                { mode: 'cors' })
+                    .then(function(response) {
+                        return response.json();
+                    })
+                    .then(function(response) {
+                        img.src = response.data.images.original.url;
+                    });        
+            };
+            showNewGIF(originalSearchLink);
+
+            const newGIFBtn = document.getElementById('new-gif-btn');
+            newGIFBtn.addEventListener('click', () => {
+                if (newSearchLink !== '') {
+                    getNewGIF(newSearchLink);
+                } else {
+                    getNewGIF(originalSearchLink);
+                }
+            })
+            
+            const searchInput = document.getElementById('search-input');
+            const searchBtn = document.getElementById('search-btn');
+ 
+            defineSearchLink = (searchTerm) => {
+                newSearchLink = originalSearchLink + '-' + searchTerm;
+            }
+
+            searchBtn.addEventListener('click', () => {
+                defineSearchLink(searchInput.value);
+                showNewGIF(newSearchLink);
+                searchInput.value = '';
+            })
+        </script>
+        <style>
+            * {
+                margin: auto;
+                text-align: center;
+                /* margin-right:auto; */
+            }
+            img {
+                margin-top: 40px;
+            }
+            button, label {
+                display: block;
+                margin-top: 10px;
+            }
+            label {
+                margin-top: 40px;
+            }
+            #new-gif-btn {
+                margin-bottom: 20px;
+                margin-top: 20px;
+            }
+        </style>
+    </body>
+    </html>
