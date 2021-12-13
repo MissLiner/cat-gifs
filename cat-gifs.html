@@ -9,29 +9,34 @@
         <button id="new-gif-btn">Random New Cat GIF</button>
         <label>Find cat GIFs relating to: <input id="search-input"></label>
         <button id="search-btn">Search</button>
+        <img id="sad-kitten-phone" src="sad-kitten-phone.png" hidden="false">
         <script>
             const img = document.querySelector('img');
             const originalSearchLink = 'https://api.giphy.com/v1/gifs/translate?api_key=KwcxvVnwXtO1U6UlgHjQEqEJRnneLDu1&s=cats';
             let newSearchLink = '';
+            let searchTerms = '';
+            let timer = 0;
 
-            showNewGIF = (searchLink) => {
-                fetch(searchLink, 
-                { mode: 'cors' })
-                    .then(function(response) {
-                        return response.json();
-                    })
-                    .then(function(response) {
-                        img.src = response.data.images.original.url;
-                    });        
+            function showNewGIF(linkURL) {
+                fetch(linkURL, { mode: 'cors' })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(response) {
+                    img.src = response.data.images.original.url;
+                })
+                .catch(function(e) {
+                    alert(e);
+                })    
             };
             showNewGIF(originalSearchLink);
 
             const newGIFBtn = document.getElementById('new-gif-btn');
             newGIFBtn.addEventListener('click', () => {
                 if (newSearchLink !== '') {
-                    getNewGIF(newSearchLink);
+                    showNewGIF(newSearchLink);
                 } else {
-                    getNewGIF(originalSearchLink);
+                    showNewGIF(originalSearchLink);
                 }
             })
             
@@ -39,7 +44,9 @@
             const searchBtn = document.getElementById('search-btn');
  
             defineSearchLink = (searchTerm) => {
-                newSearchLink = originalSearchLink + '-' + searchTerm;
+                searchTerms = searchTerm.split(' ');
+                searchTerms = searchTerms.join('-');
+                newSearchLink = originalSearchLink + '-' + searchTerms;
             }
 
             searchBtn.addEventListener('click', () => {
@@ -52,10 +59,10 @@
             * {
                 margin: auto;
                 text-align: center;
-                /* margin-right:auto; */
             }
             img {
                 margin-top: 40px;
+                height: 60%;
             }
             button, label {
                 display: block;
